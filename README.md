@@ -158,7 +158,7 @@ Available parameters:
 For Linux systems, GAIA provides both GUI and CLI support:
 
 **GUI Installation:**
-For GAIA UI (graphical interface) installation on Linux, see the [UI Documentation](docs/ui.md#ubuntu-deb) for detailed instructions including package installation for Ubuntu/Debian (.deb) and Fedora (.rpm).
+For GAIA UI (graphical interface) installation on Linux, see the [UI Documentation](docs/ui.md#linux-installation) for detailed instructions including package installation for Ubuntu/Debian (.deb) and Fedora (.rpm).
 
 **CLI Installation from Source:**
 

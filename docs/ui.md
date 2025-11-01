@@ -37,29 +37,38 @@ Install GAIA UI on Windows and Ubuntu using the packages from the GitHub [Releas
 5. Updating: download the newer `gaia-ui-setup.exe` from [Releases](https://github.com/amd/gaia/releases) and run it.
 6. Uninstalling: Windows Settings → Apps → Installed apps → find "GAIA UI" → Uninstall.
 
-## Ubuntu/Debian (.deb)
+## Linux Installation
+
+### Ubuntu/Debian (.deb)
 1. Download the latest `gaia-ui-setup.deb` (amd64) from [Releases](https://github.com/amd/gaia/releases).
-2. Open a terminal in the folder where you downloaded `gaia-ui-setup.deb`, then install with apt:
+2. Open a terminal in the folder where you downloaded the package, then install with apt:
 ```bash
 sudo apt update
 sudo apt install ./gaia-ui-setup.deb
 ```
 3. Launch GAIA UI from your application menu (search for "GAIA UI").
 4. On first launch, setup may take a moment. An internet connection is required the first time.
-5. Updating: download the newer `gaia-ui-setup.deb` from [Releases](https://github.com/amd/gaia/releases) and install it again with apt (same command as above).
+5. Updating: download the newer .deb file and install it again with apt (same command as above).
 6. Uninstalling:
 ```bash
 sudo apt remove gaiaui
 ```
 
-## Fedora (.rpm)
-
-**Note:** RPM packages for Fedora are planned for future releases. For now, Fedora users can install from source following the [Linux Installation instructions in the main README](../README.md#linux-installation).
-
-When RPM packages become available, installation will be:
+### Fedora/RHEL (.rpm)
+1. Download the latest `gaia-ui-setup.rpm` (x86_64) from [Releases](https://github.com/amd/gaia/releases).
+2. Open a terminal in the folder where you downloaded the package, then install with dnf:
 ```bash
 sudo dnf install ./gaia-ui-setup.rpm
 ```
+3. Launch GAIA UI from your application menu (search for "GAIA UI").
+4. On first launch, setup may take a moment. An internet connection is required the first time.
+5. Updating: download the newer .rpm file and install it again with dnf (same command as above).
+6. Uninstalling:
+```bash
+sudo dnf remove gaiaui
+```
+
+**Note:** Both .deb and .rpm packages are automatically built using Electron Forge and published to GitHub releases. See the [Building Packages](#building-packages) section for building locally.
 
 # GAIA UI (RAUX) Interface
 
@@ -92,6 +101,83 @@ GAIA UI builds upon OpenWebUI's solid architectural foundation while adding AMD-
 ---
 
 For more information about GAIA UI (RAUX), including setup instructions and feature documentation, please refer to the [RAUX GitHub repository README](https://github.com/aigdat/raux/blob/main/README.md).
+
+# Building Packages
+
+GAIA uses Electron Forge to build desktop application packages for multiple platforms. The build system automatically generates platform-specific installers.
+
+## Building RPM and DEB Packages
+
+The GAIA Electron apps (like JAX - Jira Agent Experience) are configured to build both .deb (Debian/Ubuntu) and .rpm (Fedora/RHEL) packages automatically.
+
+### Prerequisites
+
+- Node.js 20+
+- npm
+
+### Build Process
+
+1. Navigate to the app directory:
+```bash
+cd src/gaia/apps/jira/webui  # or any other app
+```
+
+2. Install dependencies:
+```bash
+npm ci
+```
+
+3. Build all packages:
+```bash
+npm run make
+```
+
+This will generate packages in `out/make/`:
+- **DEB package**: `out/make/deb/x64/*.deb` (for Ubuntu/Debian)
+- **RPM package**: `out/make/rpm/x64/*.rpm` (for Fedora/RHEL)
+- **Windows installer**: `out/make/squirrel.windows/x64/*.exe`
+
+### Package Configuration
+
+The packages are configured in each app's `package.json` using Electron Forge makers:
+
+```json
+{
+  "makers": [
+    {
+      "name": "@electron-forge/maker-deb",
+      "config": {},
+      "platforms": ["linux"]
+    },
+    {
+      "name": "@electron-forge/maker-rpm",
+      "config": {},
+      "platforms": ["linux"]
+    }
+  ]
+}
+```
+
+### CI/CD Automation
+
+The `.github/workflows/build-electron-apps.yml` workflow automatically builds packages for all platforms on every commit:
+
+- **Windows**: .exe installer via Squirrel
+- **Linux**: Both .deb and .rpm packages
+
+Packages are uploaded as GitHub Actions artifacts and can be published to releases.
+
+### Testing Packages Locally
+
+**Test .deb package (Ubuntu/Debian):**
+```bash
+sudo apt install ./out/make/deb/x64/*.deb
+```
+
+**Test .rpm package (Fedora):**
+```bash
+sudo dnf install ./out/make/rpm/x64/*.rpm
+```
 
 # License
 
