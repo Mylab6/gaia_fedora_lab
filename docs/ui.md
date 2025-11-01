@@ -53,20 +53,13 @@ sudo apt remove gaiaui
 ```
 
 ## Fedora (.rpm)
-1. Download the latest `gaia-ui-setup.rpm` (x86_64) from [Releases](https://github.com/amd/gaia/releases) when available.
-2. Open a terminal in the folder where you downloaded `gaia-ui-setup.rpm`, then install with dnf:
+
+**Note:** RPM packages for Fedora are planned for future releases. For now, Fedora users can install from source following the [CLI Installation instructions](../README.md#linux-installation).
+
+When RPM packages become available, installation will be:
 ```bash
 sudo dnf install ./gaia-ui-setup.rpm
 ```
-3. Launch GAIA UI from your application menu (search for "GAIA UI").
-4. On first launch, setup may take a moment. An internet connection is required the first time.
-5. Updating: download the newer `gaia-ui-setup.rpm` from [Releases](https://github.com/amd/gaia/releases) and install it again with dnf (same command as above).
-6. Uninstalling:
-```bash
-sudo dnf remove gaiaui
-```
-
-**Note:** RPM packages for Fedora will be available in future releases. For now, Fedora users can install from source following the [CLI Installation instructions](../README.md#linux-installation).
 
 # GAIA UI (RAUX) Interface
 

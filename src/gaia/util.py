@@ -92,7 +92,7 @@ def kill_process_on_port(port):
         # Give the OS some time to free the port
         if pids_to_kill:
             time.sleep(2)
-        elif not pids_to_kill:
+        else:
             print(f"No process found listening on port {port}")
     except Exception as e:
         print(f"Error killing process on port {port}: {e}")
