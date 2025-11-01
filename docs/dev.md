@@ -29,7 +29,7 @@ GAIA utilizes both NPU and iGPU on Ryzen AI systems for optimal performance on 3
 
 ## System Requirements
 
-- OS: Windows 11 Pro, 24H2 or Ubuntu 22.04 LTS / 24.04 LTS (64-bit)
+- OS: Windows 11 Pro, 24H2 or Ubuntu 22.04 LTS / 24.04 LTS / Fedora 38+ (64-bit)
 - RAM: Minimum 16GB
 - CPU: Ryzen AI 300-series processor (e.g., Ryzen AI 9 HX 370)
 - NPU Driver Versions: `32.0.203.240` and newer
@@ -48,6 +48,34 @@ GAIA utilizes both NPU and iGPU on Ryzen AI systems for optimal performance on 3
    1. Go to https://lemonade-server.ai/ and download the appropriate installer for your system
    2. Follow the installation instructions provided on the website
    3. Lemonade Server will be used as the backend for running LLMs with GAIA
+
+# Linux Prerequisites
+
+1. Install system dependencies:
+   
+   **Ubuntu/Debian:**
+   ```bash
+   sudo apt-get update
+   sudo apt-get install -y build-essential python3-dev python3-pip git curl
+   ```
+   
+   **Fedora:**
+   ```bash
+   sudo dnf install -y gcc gcc-c++ make python3-devel python3-pip git curl
+   ```
+
+2. Download and install [Miniforge](https://conda-forge.org/download/):
+   ```bash
+   wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+   bash Miniforge3-Linux-x86_64.sh -b
+   ~/miniforge3/bin/conda init bash
+   # Restart your shell or source ~/.bashrc
+   ```
+
+3. Download and install [Lemonade Server](https://lemonade-server.ai/):
+   - Visit https://lemonade-server.ai/ and download the appropriate Linux installer
+   - Follow the installation instructions provided on the website
+   - Lemonade Server will be used as the backend for running LLMs with GAIA
 
 # Setup and Installation
 1. Clone GAIA repo: `git clone https://github.com/amd/gaia.git`

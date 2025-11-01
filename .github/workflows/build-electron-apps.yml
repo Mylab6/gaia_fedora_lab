@@ -80,8 +80,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # os: [windows-latest, ubuntu-latest, macos-latest]
-        os: [windows-latest]
+        os: [windows-latest, ubuntu-latest]
         app: ${{ fromJson(needs.discover-apps.outputs.matrix).app }}
 
     steps:
@@ -109,7 +108,7 @@ jobs:
             echo "ext=exe" >> $GITHUB_OUTPUT
           elif [[ "${{ runner.os }}" == "Linux" ]]; then
             echo "name=linux" >> $GITHUB_OUTPUT
-            echo "ext=deb" >> $GITHUB_OUTPUT
+            echo "ext=deb,rpm" >> $GITHUB_OUTPUT
           fi
 
       # Find and upload build artifacts for Windows
@@ -135,15 +134,46 @@ jobs:
         id: linux_artifacts
         shell: bash
         run: |
+          # Find .deb file
           deb_file=$(find "${{ matrix.app.path }}/out/make" -name "*.deb" -type f | head -1)
+          # Find .rpm file
+          rpm_file=$(find "${{ matrix.app.path }}/out/make" -name "*.rpm" -type f | head -1)
+          
+          artifact_paths=""
+          found_any=false
+          
           if [ -n "$deb_file" ]; then
-            filename="${{ matrix.app.name }}-${{ matrix.app.version }}.deb"
-            cp "$deb_file" "$filename"
-            echo "artifact_path=$filename" >> $GITHUB_OUTPUT
+            deb_filename="${{ matrix.app.name }}-${{ matrix.app.version }}.deb"
+            cp "$deb_file" "$deb_filename"
+            artifact_paths="$deb_filename"
+            found_any=true
+            echo "✓ Found .deb package: $deb_filename"
+          else
+            echo "::warning::No Linux .deb file found for ${{ matrix.app.name }}"
+          fi
+          
+          if [ -n "$rpm_file" ]; then
+            rpm_filename="${{ matrix.app.name }}-${{ matrix.app.version }}.rpm"
+            cp "$rpm_file" "$rpm_filename"
+            if [ -n "$artifact_paths" ]; then
+              artifact_paths="$artifact_paths"$'\n'"$rpm_filename"
+            else
+              artifact_paths="$rpm_filename"
+            fi
+            found_any=true
+            echo "✓ Found .rpm package: $rpm_filename"
+          else
+            echo "::warning::No Linux .rpm file found for ${{ matrix.app.name }}"
+          fi
+          
+          echo "artifact_path<<EOF" >> $GITHUB_OUTPUT
+          echo "$artifact_paths" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          if [ "$found_any" = true ]; then
             echo "found=true" >> $GITHUB_OUTPUT
           else
             echo "found=false" >> $GITHUB_OUTPUT
-            echo "::warning::No Linux .deb file found for ${{ matrix.app.name }}"
           fi
 
       # Upload artifacts for all platforms (PR and regular builds)

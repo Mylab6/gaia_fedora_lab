@@ -18,7 +18,7 @@ Available parameters:
 GAIA is designed for AMD Ryzen AI systems. For optimal performance, you need an AMD Ryzen AI 300-series processor with NPU support.
 
 ### Does GAIA support Linux or macOS?
-GAIA fully supports both Windows 11 and Linux (Ubuntu/Debian) with complete UI and CLI functionality. macOS is not currently supported.
+GAIA fully supports both Windows 11 and Linux (Ubuntu/Debian/Fedora) with complete UI and CLI functionality. macOS is not currently supported.
 
 ### How do I install additional models?
 Additional models can be installed through Lemonade Server's model management interface, accessible via the system tray icon or WebUI. For detailed instructions, see [Installing Additional Models](./features.md#installing-additional-models) in the features documentation.

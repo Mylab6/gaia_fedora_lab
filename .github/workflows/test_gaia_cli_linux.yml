@@ -1,9 +1,9 @@
 # Copyright(C) 2024-2025 Advanced Micro Devices, Inc. All rights reserved.
 # SPDX-License-Identifier: MIT
 
-# This workflow tests the GAIA CLI on Linux (Ubuntu) with Lemonade server support
+# This workflow tests the GAIA CLI on Linux (Ubuntu, Fedora) with Lemonade server support
 # Tests include: CLI installation, Lemonade server setup, core commands, and evaluation tools
-# Platform: Linux/Ubuntu (Full CLI functionality with Lemonade server)
+# Platform: Linux/Ubuntu/Fedora (Full CLI functionality with Lemonade server)
 
 name: GAIA CLI Tests (Linux)
 
@@ -32,27 +32,43 @@ permissions:
 
 jobs:
   test-gaia-cli-linux:
-    name: Test GAIA CLI on Linux (Full Integration)
-    runs-on: ubuntu-latest
+    name: Test GAIA CLI on ${{ matrix.os-name }} (Full Integration)
+    runs-on: ${{ matrix.os }}
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false || contains(github.event.pull_request.labels.*.name, 'ready_for_ci')
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            os-name: Ubuntu
+            pkg-manager: apt-get
+            pkg-install: sudo apt-get install -y
+            sys-deps: build-essential curl jq
+          # Fedora testing uses ubuntu-latest runner with fedora:39 container
+          - os: ubuntu-latest
+            os-name: Fedora
+            container: fedora:39
+            pkg-manager: dnf
+            pkg-install: dnf install -y
+            sys-deps: gcc gcc-c++ make curl jq wget git
+    container: ${{ matrix.container }}
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install system dependencies
+        run: |
+          echo "=== Installing system dependencies for ${{ matrix.os-name }} ==="
+          ${{ matrix.pkg-install }} ${{ matrix.sys-deps }}
+
       - name: Download and Install Miniforge
         run: |
-          echo "=== Installing Miniforge for Conda Environment Management ==="
+          echo "=== Installing Miniforge for Conda Environment Management on ${{ matrix.os-name }} ==="
           wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O miniforge.sh
           bash miniforge.sh -b -p $HOME/miniforge3
           echo "$HOME/miniforge3/bin" >> $GITHUB_PATH
           source $HOME/miniforge3/bin/activate
           conda init bash
-
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential curl jq
 
       - name: Create Conda Environment and Install Lemonade
         run: |
@@ -80,7 +96,7 @@ jobs:
 
       - name: Verify GAIA CLI installation
         run: |
-          echo "=== Testing GAIA CLI Installation ==="
+          echo "=== Testing GAIA CLI Installation on ${{ matrix.os-name }} ==="
           source $HOME/miniforge3/bin/activate
           conda activate lemon
           
@@ -94,11 +110,11 @@ jobs:
           
           # Verify gaia command is available
           which gaia
-          echo "GAIA CLI installed successfully!"
+          echo "GAIA CLI installed successfully on ${{ matrix.os-name }}!"
 
       - name: Start Lemonade Server and Test Core Commands
         run: |
-          echo "=== Starting Lemonade Server ==="
+          echo "=== Starting Lemonade Server on ${{ matrix.os-name }} ==="
           source $HOME/miniforge3/bin/activate
           conda activate lemon
           
@@ -175,7 +191,7 @@ jobs:
           echo "=== Listing Available Models ==="
           curl -s http://localhost:8000/api/v1/models | jq '.' || echo "Could not list models"
           
-          echo "=== Testing Core GAIA CLI Commands with Lemonade ==="
+          echo "=== Testing Core GAIA CLI Commands with Lemonade on ${{ matrix.os-name }} ==="
           
           # Test chat command with Qwen model (should now work with Lemonade)
           echo "Testing chat command with Qwen3-0.6B-GGUF model:"
@@ -189,11 +205,11 @@ jobs:
           echo "Testing llm command with Qwen3-0.6B-GGUF model:"
           timeout 30s gaia llm --model "Qwen3-0.6B-GGUF" "Say hello" || echo "LLM command completed"
           
-          echo "✅ Core commands tested successfully!"
+          echo "✅ Core commands tested successfully on ${{ matrix.os-name }}!"
           
           # Now test summarizer while server is still running
           echo ""
-          echo "=== Testing Summarizer Integration ==="
+          echo "=== Testing Summarizer Integration on ${{ matrix.os-name }} ==="
           echo "Testing complete CLI workflow: gaia summarize command"
           
           # Install pytest if not already installed
@@ -206,7 +222,7 @@ jobs:
           python -m pytest tests/test_summarizer.py -vs --tb=short || TEST_EXIT=$?
           
           if [ "${TEST_EXIT:-0}" -eq 0 ]; then
-            echo "✅ Summarizer CLI integration tests passed successfully!"
+            echo "✅ Summarizer CLI integration tests passed successfully on ${{ matrix.os-name }}!"
           else
             echo "❌ Summarizer CLI integration tests failed with exit code: ${TEST_EXIT}"
             echo "Note: Error details displayed above"
@@ -222,7 +238,7 @@ jobs:
 
       - name: Test evaluation and utility commands
         run: |
-          echo "=== Testing Evaluation and Utility Commands ==="
+          echo "=== Testing Evaluation and Utility Commands on ${{ matrix.os-name }} ==="
           source $HOME/miniforge3/bin/activate
           conda activate lemon
           
@@ -268,21 +284,21 @@ jobs:
 
       - name: Test platform compatibility
         run: |
-          echo "=== Testing Platform Compatibility ==="
+          echo "=== Testing Platform Compatibility on ${{ matrix.os-name }} ==="
           source $HOME/miniforge3/bin/activate
           conda activate lemon
           
           # Test that Linux-specific process commands work
           echo "Testing kill command with invalid port (should handle gracefully):"
           if gaia kill --port 99999 2>&1 | grep -q "No process found"; then
-            echo "✅ Kill command handled Linux environment gracefully"
+            echo "✅ Kill command handled ${{ matrix.os-name }} environment gracefully"
           else
-            echo "⚠️  Kill command may not be fully Linux-compatible"
+            echo "⚠️  Kill command may not be fully ${{ matrix.os-name }}-compatible"
           fi
 
       - name: Test import statements
         run: |
-          echo "=== Testing Python Import Compatibility ==="
+          echo "=== Testing Python Import Compatibility on ${{ matrix.os-name }} ==="
           source $HOME/miniforge3/bin/activate
           conda activate lemon
           
@@ -293,7 +309,7 @@ jobs:
               from gaia.version import version
               from gaia.logger import get_logger
               from gaia.llm.llm_client import LLMClient
-              print('✅ All core imports successful on Linux')
+              print('✅ All core imports successful on ${{ matrix.os-name }}')
           except ImportError as e:
               print(f'❌ Import error: {e}')
               exit(1)
@@ -303,8 +319,8 @@ jobs:
 
       - name: Summary
         run: |
-          echo "=== Linux Full Integration Test Summary ==="
-          echo "✅ GAIA CLI installation works on Linux"
+          echo "=== ${{ matrix.os-name }} Full Integration Test Summary ==="
+          echo "✅ GAIA CLI installation works on ${{ matrix.os-name }}"
           echo "✅ Miniforge and Conda environment setup successful"
           echo "✅ Lemonade server installation and startup successful"
           echo "✅ Core CLI commands (chat, prompt, llm) working with Lemonade"
@@ -312,7 +328,7 @@ jobs:
           echo "✅ Cross-platform process management working"
           echo "✅ Core Python modules import successfully"
           echo ""
-          echo "🎉 Linux now has full GAIA CLI functionality!"
+          echo "🎉 ${{ matrix.os-name }} now has full GAIA CLI functionality!"
           echo "📋 Tested components:"
           echo "   ✅ Lemonade server with Qwen3-0.6B-GGUF model"
           echo "   ✅ Core CLI commands using Qwen model (chat, prompt, llm)"
@@ -322,6 +338,6 @@ jobs:
           echo "   ✅ Process management and cleanup"
           echo ""
           echo "🚀 Next enhancements:"
-          echo "   🔧 Test audio/TTS functionality on Linux"
+          echo "   🔧 Test audio/TTS functionality on ${{ matrix.os-name }}"
           echo "   🔧 Add Linux NPU driver support (if available)"
           echo "   🔧 Optimize model loading and performance"

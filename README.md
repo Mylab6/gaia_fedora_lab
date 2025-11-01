@@ -21,7 +21,7 @@
 
 **Platform Support:**
 - **Windows 11 Home/Pro**: Full GUI and CLI support with installer
-- **Linux (Ubuntu/Debian)**: Full GUI and CLI support via source installation
+- **Linux (Ubuntu/Debian/Fedora)**: Full GUI and CLI support via source installation
 
 - 🏠 **Local LLM Processing**: Easily run powerful language models directly on your device without cloud dependencies
 - ⚡ **Direct LLM Access**: Query models instantly with the new `gaia llm` command - no server setup required
@@ -81,7 +81,7 @@ For more details and setup instructions, see the [UI Documentation](docs/ui.md).
 - **AMD Ryzen processor** (any generation)
 
 **Linux (CLI Only):**
-- **Ubuntu 20.04+** or **Debian 11+**
+- **Ubuntu 20.04+**, **Debian 11+**, or **Fedora 38+**
 - **16GB RAM minimum** (32GB recommended)
 - **x86_64 architecture**
 
@@ -158,7 +158,7 @@ Available parameters:
 For Linux systems, GAIA provides both GUI and CLI support:
 
 **GUI Installation:**
-For GAIA UI (graphical interface) installation on Linux, see the [UI Documentation](docs/ui.md#ubuntu-deb) for detailed instructions including .deb package installation.
+For GAIA UI (graphical interface) installation on Linux, see the [UI Documentation](docs/ui.md#linux-installation) for detailed instructions including package installation for Ubuntu/Debian (.deb) and Fedora (.rpm).
 
 **CLI Installation from Source:**
 
@@ -174,24 +174,37 @@ For GAIA UI (graphical interface) installation on Linux, see the [UI Documentati
    cd gaia
    ```
 
-2. Install GAIA CLI:
+2. Install system dependencies:
+   
+   **Ubuntu/Debian:**
+   ```bash
+   sudo apt-get update
+   sudo apt-get install -y build-essential python3-dev
+   ```
+   
+   **Fedora:**
+   ```bash
+   sudo dnf install -y gcc gcc-c++ make python3-devel
+   ```
+
+3. Install GAIA CLI:
    ```bash
    pip install -e .
    ```
 
-3. Install Lemonade server (for model serving):
+4. Install Lemonade server (for model serving):
    ```bash
    # Download and install Lemonade server
    # Visit https://www.lemonade-server.ai for latest Linux release
    # Or build from source following their documentation
    ```
 
-4. Verify installation:
+5. Verify installation:
    ```bash
    gaia -v
    ```
 
-**Note:** Both GUI (.deb packages) and CLI (source installation) are fully supported on Linux. 
+**Note:** Both GUI (.deb packages for Ubuntu/Debian, .rpm packages for Fedora) and CLI (source installation) are fully supported on Linux. 
 
 ## Uninstallation Steps
 
@@ -314,7 +327,7 @@ GAIA with Ryzen AI Hybrid NPU/iGPU execution has been tested on the following sy
 
 ⚠️ **NOTE**: 
 - **Windows**: Full GUI and CLI support with installer
-- **Linux**: Full GUI and CLI support via source installation
+- **Linux (Ubuntu/Debian/Fedora)**: Full GUI and CLI support via source installation
 - **macOS**: Not supported at this time
 
 GAIA has been tested on the following system:
