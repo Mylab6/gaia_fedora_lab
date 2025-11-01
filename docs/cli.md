@@ -5,7 +5,7 @@ GAIA (Generative AI Acceleration Infrastructure & Applications) provides a comma
 ## Platform Support
 
 - **Windows 11**: Full GUI and CLI support with installer and desktop shortcuts
-- **Linux (Ubuntu/Debian)**: Full GUI and CLI support via source installation
+- **Linux (Ubuntu/Debian/Fedora)**: Full GUI and CLI support via source installation
 - **macOS**: Not supported
 
 ## GAIA-CLI Getting Started Guide

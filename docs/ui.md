@@ -27,7 +27,7 @@ Install GAIA UI on Windows and Ubuntu using the packages from the GitHub [Releas
 
 ## Supported platforms
 - Windows 11 (64-bit) - Full GUI and CLI support
-- Linux: Ubuntu 22.04 LTS or 24.04 LTS (64-bit) - Full GUI and CLI support
+- Linux: Ubuntu 22.04 LTS / 24.04 LTS / Fedora 38+ (64-bit) - Full GUI and CLI support
 
 ## Windows (.exe)
 1. Download the latest `gaia-ui-setup.exe` from [Releases](https://github.com/amd/gaia/releases).
@@ -37,7 +37,7 @@ Install GAIA UI on Windows and Ubuntu using the packages from the GitHub [Releas
 5. Updating: download the newer `gaia-ui-setup.exe` from [Releases](https://github.com/amd/gaia/releases) and run it.
 6. Uninstalling: Windows Settings → Apps → Installed apps → find "GAIA UI" → Uninstall.
 
-## Ubuntu (.deb)
+## Ubuntu/Debian (.deb)
 1. Download the latest `gaia-ui-setup.deb` (amd64) from [Releases](https://github.com/amd/gaia/releases).
 2. Open a terminal in the folder where you downloaded `gaia-ui-setup.deb`, then install with apt:
 ```bash
@@ -51,6 +51,22 @@ sudo apt install ./gaia-ui-setup.deb
 ```bash
 sudo apt remove gaiaui
 ```
+
+## Fedora (.rpm)
+1. Download the latest `gaia-ui-setup.rpm` (x86_64) from [Releases](https://github.com/amd/gaia/releases) when available.
+2. Open a terminal in the folder where you downloaded `gaia-ui-setup.rpm`, then install with dnf:
+```bash
+sudo dnf install ./gaia-ui-setup.rpm
+```
+3. Launch GAIA UI from your application menu (search for "GAIA UI").
+4. On first launch, setup may take a moment. An internet connection is required the first time.
+5. Updating: download the newer `gaia-ui-setup.rpm` from [Releases](https://github.com/amd/gaia/releases) and install it again with dnf (same command as above).
+6. Uninstalling:
+```bash
+sudo dnf remove gaiaui
+```
+
+**Note:** RPM packages for Fedora will be available in future releases. For now, Fedora users can install from source following the [CLI Installation instructions](../README.md#linux-installation).
 
 # GAIA UI (RAUX) Interface
 

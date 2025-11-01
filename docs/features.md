@@ -5,7 +5,7 @@ Currently, the following capabilities are available, more will be added in the n
 ## Platform Support Overview
 
 - **Windows 11**: Full GUI and CLI support with all features
-- **Linux (Ubuntu/Debian)**: Full GUI and CLI support with all features
+- **Linux (Ubuntu/Debian/Fedora)**: Full GUI and CLI support with all features
 - **macOS**: Not supported
 
 | Use-Case Example   | Function                                 | Description                                                     | Platform Support |
