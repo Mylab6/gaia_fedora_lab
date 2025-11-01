@@ -43,6 +43,7 @@ jobs:
             pkg-manager: apt-get
             pkg-install: sudo apt-get install -y
             sys-deps: build-essential curl jq
+          # Fedora testing uses ubuntu-latest runner with fedora:39 container
           - os: ubuntu-latest
             os-name: Fedora
             container: fedora:39

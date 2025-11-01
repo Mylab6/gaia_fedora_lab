@@ -54,7 +54,7 @@ sudo apt remove gaiaui
 
 ## Fedora (.rpm)
 
-**Note:** RPM packages for Fedora are planned for future releases. For now, Fedora users can install from source following the [CLI Installation instructions](../README.md#linux-installation).
+**Note:** RPM packages for Fedora are planned for future releases. For now, Fedora users can install from source following the [Linux Installation instructions in the main README](../README.md#linux-installation).
 
 When RPM packages become available, installation will be:
 ```bash
